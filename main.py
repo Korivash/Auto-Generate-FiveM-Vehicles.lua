@@ -2,7 +2,7 @@ import os
 import re
 
 # Define your FiveM vehicle resource folder
-FIVEM_VEHICLES_PATH = r"" # Add Your File Path To Your vehicles here
+FIVEM_VEHICLES_PATH = r"" #Add Your Car Folder Here
 
 # Output file for Lua
 OUTPUT_FILE = os.path.join(FIVEM_VEHICLES_PATH, "vehicles.lua")
@@ -31,11 +31,11 @@ def extract_vehicle_data(file_path):
                     'name': model.capitalize(),
                     'brand': brand.capitalize(),
                     'model': model,
-                    'price': 20000,  # Default price (can be customized later)
+                    'price': 20000,  # Default price (customizable)
                     'category': category.lower(),
                     'categoryLabel': category.capitalize(),
-                    'hash': f'`{model}`',
-                    'shop': 'pdm',  # Default shop, can be modified
+                    'hash': f'`{model}`',  # Hash must have backticks
+                    'shop': 'pdm',  # Default shop (can be changed)
                 })
     except Exception as e:
         print(f"Error reading {file_path}: {e}")
@@ -69,7 +69,7 @@ def generate_lua_file(vehicles):
             lua_file.write(f"        ['price'] = {vehicle['price']},\n")
             lua_file.write(f"        ['category'] = '{vehicle['category']}',\n")
             lua_file.write(f"        ['categoryLabel'] = '{vehicle['categoryLabel']}',\n")
-            lua_file.write(f"        ['hash'] = {vehicle['hash']},\n")
+            lua_file.write(f"        ['hash'] = {vehicle['hash']},\n")  # Backticks included
             lua_file.write(f"        ['shop'] = '{vehicle['shop']}',\n")
             lua_file.write(f"    }},\n")
 
@@ -84,3 +84,4 @@ if __name__ == "__main__":
         generate_lua_file(vehicles)
     else:
         print("No vehicles found.")
+
