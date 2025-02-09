@@ -2,7 +2,7 @@ import os
 import re
 
 # Define your FiveM vehicle resource folder
-FIVEM_VEHICLES_PATH = r"" #Add Your Car Folder Here
+FIVEM_VEHICLES_PATH = r""  # Add your car folder path here
 
 # Output file for Lua
 OUTPUT_FILE = os.path.join(FIVEM_VEHICLES_PATH, "vehicles.lua")
@@ -11,6 +11,20 @@ OUTPUT_FILE = os.path.join(FIVEM_VEHICLES_PATH, "vehicles.lua")
 MODEL_PATTERN = re.compile(r'<modelName>(.*?)</modelName>')
 BRAND_PATTERN = re.compile(r'<gameName>(.*?)</gameName>')  # Some files use <gameName> for brand
 CATEGORY_PATTERN = re.compile(r'<vehicleClass>(.*?)</vehicleClass>')
+
+# Default category mapping based on known vehicle classes
+CATEGORY_MAP = {
+    "compacts": "compacts",
+    "coupes": "coupes",
+    "muscle": "muscle",
+    "offroad": "offroad",
+    "suvs": "suv",
+    "sports": "sports",
+    "sedans": "sedans",
+    "vans": "vans",
+    "motorcycles": "motorcycles",
+    "super": "super",
+}
 
 # Function to extract vehicle data from a meta file
 def extract_vehicle_data(file_path):
@@ -25,14 +39,15 @@ def extract_vehicle_data(file_path):
 
             for i, model in enumerate(models):
                 brand = brands[i] if i < len(brands) else "Unknown"
-                category = categories[i] if i < len(categories) else "unknown"
+                raw_category = categories[i] if i < len(categories) else "super"  # Default to super
+                category = CATEGORY_MAP.get(raw_category.lower(), "super")  # Map to known category
 
                 vehicles.append({
                     'name': model.capitalize(),
                     'brand': brand.capitalize(),
                     'model': model,
                     'price': 20000,  # Default price (customizable)
-                    'category': category.lower(),
+                    'category': category,
                     'categoryLabel': category.capitalize(),
                     'hash': f'`{model}`',  # Hash must have backticks
                     'shop': 'pdm',  # Default shop (can be changed)
@@ -84,4 +99,5 @@ if __name__ == "__main__":
         generate_lua_file(vehicles)
     else:
         print("No vehicles found.")
+
 
